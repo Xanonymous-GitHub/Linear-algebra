@@ -58,13 +58,6 @@ def has_same_col_length(r):
     return True
 
 
-def reduction(resource: list):
-    for i, x in enumerate(resource):
-        for j, y in enumerate(x):
-            h = (-1 if i % 2 else 1) * (-1 if j % 2 else 1)
-            return magnification_iteration(get_ans_range(i, j, resource), h * y)
-
-
 def get_ans_range(ii, jj, resource: list):
     ans = list()
     for i, x in enumerate(resource):
@@ -72,7 +65,8 @@ def get_ans_range(ii, jj, resource: list):
         for j, y in enumerate(x):
             if not (i == ii or j == jj):
                 tmp_slice.append(y)
-        ans.append(tmp_slice)
+        if len(tmp_slice):
+            ans.append(tmp_slice)
     return ans
 
 
@@ -83,16 +77,20 @@ def magnification_iteration(r: list, rate):
     return r
 
 
-def determinant(r):
+def determinant(r, result=list()):
     assert has_same_col_length(r)
-    if n := len(r) == 2:
+    assert len(r) == len(r[0])
+    if len(r) == 2:
         return r[0][0] * r[1][1] - r[0][1] * r[1][0]
-    elif n > 2:
-        return determinant(reduction(r))
+    for i, x in enumerate(r):
+        for j, y in enumerate(x):
+            h = (-1 if i % 2 else 1) * (-1 if j % 2 else 1)
+            result.append(determinant(magnification_iteration(get_ans_range(i, j, r), h * y), result))
+    return (result)
 
 
 def main():
-    a = [[1, 2, 4], [3, 4, 5], [2, 3, 4]]
+    a = [[2, 5, 2], [3, 4, 2], [1, 1, 1]]
     b = [[5, 6], [7, 8]]
     print(determinant(a))
 
