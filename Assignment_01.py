@@ -95,12 +95,12 @@ class Matrix:
 
 
 def main():
-    a = [[-1, 2, 0], [2, 0, 3], [1, 1, 1]]
+    a = [[-1, 2, 0], [2, 0, 3]]
     b = [[5, 6], [7, 8]]
     c = [[0, 2], [1, 0], [-1, 1]]
     # print(multiply(c, a))
     matrix = Matrix(b)
-    print(matrix.inverse)
+    print(matrix.multiply(a))
 
 
 if __name__ == "__main__":
