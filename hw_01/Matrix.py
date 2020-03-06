@@ -1,15 +1,22 @@
+import math
+
+
 class Matrix:
 
-    def __init__(self, user_input):
-        assert self.__has_same_col_length(user_input), "invalid matrix."
-        self.__storage = user_input
+    def __init__(self, u):
+        assert self.__has_same_col_length(u), "invalid matrix."
+        self.__storage = u
 
     def __str__(self):
-        self.pretty(self.__storage)
+        self.__pretty(self.__storage)
 
     @staticmethod
-    def pretty(r):
+    def __pretty(r):
         return '\n'.join(map(str, r))
+
+    @property
+    def show(self):
+        return self.__pretty(self.__storage)
 
     @property
     def val(self):
@@ -23,27 +30,29 @@ class Matrix:
         for i, x in enumerate(self.__storage):
             for j, y in enumerate(x):
                 result[i][j] += y if t else -1 * y
-        return self.pretty(result)
+        return result
 
     # Matrix multiplication
-    def multiply(self, father_result):
+    def multiply(self, result):
+        if type(result) is int:
+            return self.__rate(self.__storage, result)
         # If the matrices cannot be multiplied, throw an error.
-        assert self.__has_same_col_length(father_result), "can not multiply."
+        assert self.__has_same_col_length(result), "can not multiply."
         for g in self.__storage:
-            assert len(g) == len(father_result), "can't not multiply."
+            assert len(g) == len(result), "can't not multiply."
         # if the second matrix is an identity_matrix, the answer will be the same as first matrix.
-        if self.is_unit_matrix(father_result):
+        if self.is_unit_matrix(result):
             return self.__storage
         ans = list()
         for i, x in enumerate(self.__storage):
             tmp_slice = list()
-            for n in self.transpose(father_result):
+            for n in self.__transpose(result):
                 tmp_num = list()
                 for j, y in enumerate(x):
                     tmp_num.append(y * n[j])
                 tmp_slice.append(sum(tmp_num))
             ans.append(tmp_slice)
-        return self.pretty(ans)
+        return ans
 
     @property
     def inverse(self):
@@ -54,7 +63,10 @@ class Matrix:
         self.__storage[0][0], self.__storage[1][1] = self.__storage[1][1], self.__storage[0][0]
         self.__storage[0][1] *= -1
         self.__storage[1][0] *= -1
-        return self.pretty(self.__magnification_iteration(self.__storage, 1 / determinant))
+        return self.__magnification_iteration(self.__storage, 1 / determinant)
+
+    def transpose(self):
+        self.__storage = self.__transpose(self.__storage)
 
     def __determinant(self, r):
         assert self.__has_same_col_length(r)
@@ -74,7 +86,7 @@ class Matrix:
         return msg
 
     @staticmethod
-    def transpose(resource: list):
+    def __transpose(resource: list):
         return list(map(list, zip(*resource)))
 
     @staticmethod
@@ -104,21 +116,50 @@ class Matrix:
         return ans
 
     @staticmethod
+    def __rate(r, amount):
+        for i, x in enumerate(r):
+            for j, y in enumerate(x):
+                r[i][j] *= amount
+        return r
+
+    @staticmethod
     def __magnification_iteration(r: list, rate):
         for i, x in enumerate(r):
             r[i][0] *= rate
         return r
 
 
+class UnitMatrix(Matrix):
+    def __init__(self):
+        super().__init__([[1, 0], [0, 1]])
+
+
+def defines():
+    pi = math.pi
+    a = Matrix([[-1, 2, 0], [2, 0, 3]])
+    b = Matrix([[2, 0, -1], [1, -2, 0]])
+    c = Matrix([[0, 2], [1, 0], [-1, 1]])
+    e = Matrix([[2, -1], [pi, math.log10(2)], [-2, 6]])
+    i = UnitMatrix
+    return a, b, c, e, i
+
+
 def main():
-    a = [[-1, 2, 0], [2, 0, 3]]
-    b = [[5, 6], [7, 8]]
-    c = [[0, 2], [1, 0], [-1, 1]]
-    # print(multiply(c, a))
-    matrixb = Matrix(b)
-    matrixa = Matrix(c)
-    print(matrixa.multiply(matrixb.val))
+    a, b, c, e, i = defines()
+    result = Matrix
+    # A+2B
+    result = a.combine(b.multiply(2))
+    print("A+2B")
+    print(result.show)
+    # C-E
+    result = c.combine(e.val, False)
+    print("C-E")
+    print(result.show)
+    # transpose A
+    # result = a.transpose
+    # print("transpose A")
+    # print(result.show)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
