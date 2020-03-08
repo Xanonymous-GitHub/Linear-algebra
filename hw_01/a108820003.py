@@ -26,7 +26,7 @@ class Matrix:
         # If the matrices cannot be added or subtracted, throw an error.
         assert (self.__has_same_col_length(self.__storage) and self.__has_same_col_length(resource) and (
                 len(self.__storage) == len(resource) and len(self.__storage[0]) == len(
-                    resource[0]))), "===Undefined===\ncan't combine."
+            resource[0]))), "===Undefined===\ncan't combine."
         for i, x in enumerate(resource):
             for j, y in enumerate(x):
                 # the parameter T can control the method to plus or minus.
@@ -57,14 +57,23 @@ class Matrix:
 
     def inverse(self):
         # we not accept the matrix of 3 by 3 or more to be inverse.
-        assert len(self.__storage) == 2
-        assert self.__has_same_col_length(self.__storage)
         determinant = self.__determinant(self.__storage)
         assert determinant, "===Undefined===\ncan not inverse."
-        self.__storage[0][0], self.__storage[1][1] = self.__storage[1][1], self.__storage[0][0]
-        self.__storage[0][1] *= -1
-        self.__storage[1][0] *= -1
-        self.__storage = self.__rate(self.__storage, 1 / determinant)
+        if len(self.__storage) == 2:
+            self.__storage[0][0], self.__storage[1][1] = self.__storage[1][1], self.__storage[0][0]
+            self.__storage[0][1] *= -1
+            self.__storage[1][0] *= -1
+            self.__storage = self.__rate(self.__storage, 1 / determinant)
+        else:
+            ans = list()
+            for i, x in enumerate(self.__storage):
+                ans_tmp = list()
+                for j, y in enumerate(x):
+                    h = (-1 if i % 2 else 1) * (-1 if j % 2 else 1)
+                    ans_tmp.append(h * self.__determinant(self.__get_ans_range(i, j, self.__storage)))
+                ans.append(ans_tmp)
+            ans = self.__transpose(ans)
+            self.__storage = self.__rate(ans, 1 / determinant)
 
     def transpose(self):
         self.__storage = self.__transpose(self.__storage)
