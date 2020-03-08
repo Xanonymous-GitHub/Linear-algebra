@@ -15,7 +15,7 @@ class Matrix:
 
     def __init__(self, u):
         # object constructor
-        assert self.__has_same_col_length(u), "invalid matrix."
+        assert self.__has_same_col_length(u), "===Undefined===\ninvalid matrix."
         self.__storage = u
 
     def __str__(self):
@@ -25,7 +25,8 @@ class Matrix:
     def combine(self, resource, t=True):
         # If the matrices cannot be added or subtracted, throw an error.
         assert (self.__has_same_col_length(self.__storage) and self.__has_same_col_length(resource) and (
-                len(self.__storage) == len(resource) and len(self.__storage[0]) == len(resource[0]))), "can't combine."
+                len(self.__storage) == len(resource) and len(self.__storage[0]) == len(
+                    resource[0]))), "===Undefined===\ncan't combine."
         for i, x in enumerate(resource):
             for j, y in enumerate(x):
                 # the parameter T can control the method to plus or minus.
@@ -37,9 +38,9 @@ class Matrix:
             # method accept single integer to be calculated.
             return self.__rate(self.__storage, result)
         # If the matrices cannot be multiplied, throw an error.
-        assert self.__has_same_col_length(result), "can not multiply."
+        assert self.__has_same_col_length(result), "===Undefined===\ncan not multiply."
         for g in self.__storage:
-            assert len(g) == len(result), "can't not multiply."
+            assert len(g) == len(result), "===Undefined===\ncan't not multiply."
         # if the second matrix is an identity_matrix, the answer will be the same as first matrix.
         if self.is_unit_matrix(result):
             return self.__storage
@@ -59,7 +60,7 @@ class Matrix:
         assert len(self.__storage) == 2
         assert self.__has_same_col_length(self.__storage)
         determinant = self.__determinant(self.__storage)
-        assert determinant, "can not inverse."
+        assert determinant, "===Undefined===\ncan not inverse."
         self.__storage[0][0], self.__storage[1][1] = self.__storage[1][1], self.__storage[0][0]
         self.__storage[0][1] *= -1
         self.__storage[1][0] *= -1
